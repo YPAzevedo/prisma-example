@@ -46,23 +46,17 @@ app.post("/users", async (req, res) => {
 });
 
 app.get("/posts", async (req, res) => {
-  const posts = await prisma.post.findMany();
+  const posts = await prisma.post.findMany({
+    include: {
+      author: true,
+    },
+  });
 
   return res.json(posts);
 });
 
 app.post("/posts", async (req, res) => {
   const { title, content, authorId } = req.body;
-
-  const user = prisma.user.findOne({
-    where: {
-      id: authorId,
-    },
-  });
-
-  if (!user) {
-    return res.status(400).json({ error: "Need to specify the author" });
-  }
 
   const updatedUser = await prisma.user.update({
     where: { id: authorId },
