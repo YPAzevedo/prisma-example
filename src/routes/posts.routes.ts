@@ -1,39 +1,13 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import express from "express";
 
-const prisma = new PrismaClient();
+import PostsController from "../controllers/posts.controller";
 
 const postsRouter = express.Router();
 
-postsRouter.get("/", async (req, res) => {
-  const posts = await prisma.post.findMany({
-    include: {
-      author: true,
-    },
-  });
+const postsController = new PostsController();
 
-  return res.json(posts);
-});
-
-postsRouter.post("/", async (req, res) => {
-  const { title, content, authorId } = req.body;
-
-  const updatedUser = await prisma.user.update({
-    where: { id: authorId },
-    data: {
-      posts: {
-        create: {
-          title,
-          content,
-        },
-      },
-    },
-    include: {
-      posts: true,
-    },
-  });
-
-  return res.json(updatedUser.posts);
-});
+postsRouter.post("/", postsController.create);
+postsRouter.get("/", postsController.list);
+postsRouter.get("/:id", postsController.listByUser);
 
 export default postsRouter;

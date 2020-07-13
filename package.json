@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev:server": "ts-node-dev --transpile-only src/server.ts"
+    "dev:server": "prisma generate && ts-node-dev --transpile-only src/server.ts"
   },
   "devDependencies": {
     "@prisma/cli": "2.2.0",
